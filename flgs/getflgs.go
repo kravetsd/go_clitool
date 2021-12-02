@@ -6,12 +6,6 @@ import (
 	"github.com/kravetsd/go-clitool/bb"
 )
 
-type Platform struct {
-	platform string
-	region   string
-	env      string
-}
-
 func GetClone() (link, path, b string) {
 
 	reponame := flag.String("reponame", "", "specify a repository name")
