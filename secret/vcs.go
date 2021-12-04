@@ -37,11 +37,17 @@ func NewEnvironment() *Environment {
 	}
 
 	buf := bytes.Buffer{}
-	buf.ReadFrom(f)
+	_, err = buf.ReadFrom(f)
+	if err != nil {
+		log.Fatalf("secret: open Vault cert file: %s", err)
+	}
 	buf.WriteString(env.VaultTlsCert)
 
 	VaultTlsConfig := &vault.TLSConfig{CAPath: fmt.Sprintf("%s/%s", env.Home, env.VaultTlsCertPath), TLSServerName: env.VaultAddress}
-	config.ConfigureTLS(VaultTlsConfig)
+	err = config.ConfigureTLS(VaultTlsConfig)
+	if err != nil {
+		log.Fatalf("secret: TLSconfig:  %s", err)
+	}
 	vaultclient, err := vault.NewClient(config)
 	if err != nil {
 		log.Fatalf("secret error: %s", err)
